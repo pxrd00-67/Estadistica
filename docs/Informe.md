@@ -1,4 +1,4 @@
-# Calculadora de enteros en consola — Informe del proyecto
+# Calculadora de enteros en consola — Informe del proyecto (v1.1)
 
 ## 1–4. Aplicación
 
@@ -6,7 +6,7 @@ Código en `src/main/java/co/estadistica/calculadora/`:
 
 | Archivo | Responsabilidad |
 |---|---|
-| `Calculadora.java` | Un método por operación: `suma`, `resta`, `multiplicacion`, `division`. |
+| `Calculadora.java` | Un método por operación: `suma`, `resta`, `multiplicacion`, `division` y, desde v1.1, `potencia` (ver punto 10). |
 | `Main.java` | Lectura de los dos enteros por consola, validación y escritura de resultados/errores. |
 
 Decisiones de diseño:
@@ -57,6 +57,7 @@ El *cliente* que aprueba los requisitos es un interesado (stakeholder), no un ac
 | UC3 | Restar | Usuario → UC3; «include» UC6 |
 | UC4 | Multiplicar | Usuario → UC4; «include» UC6 |
 | UC5 | Dividir | Usuario → UC5; «include» UC6 |
+| UC9 | Calcular potencia (a^b) *(v1.1)* | Usuario → UC9; «include» UC6 |
 | UC7 | Manejar división por cero | «extend» de UC5 (solo si b = 0) |
 | UC6 | Mostrar resultados y mensajes | Salida por consola |
 
@@ -68,7 +69,7 @@ La hoja de Excel de la asignación **no estaba en el repositorio**, así que se 
 - La columna *Resultado obtenido* **no se escribió a mano**: `tools/generar_excel.py` ejecuta la aplicación real con las entradas de cada caso, captura su salida y la compara con el esperado.
 - Para reproducir: `mvn test` y `mvn -q compile && python3 tools/generar_excel.py`.
 
-Resultado de la última ejecución: **22 casos, 22 pasan, 0 fallan** (`mvn test`: 22 tests, 0 fallos).
+Resultado de la última ejecución: **32 casos, 32 pasan, 0 fallan** (`mvn test`: 32 tests, 0 fallos). TC-01…TC-22 corresponden a v1.0 y TC-23…TC-32 a la potencia (v1.1).
 
 Técnicas usadas: clases de equivalencia (positivos, negativos, cero) y valores límite (`Integer.MAX_VALUE`, división entre cero, entrada fuera de rango).
 
@@ -115,3 +116,22 @@ Técnicas usadas: clases de equivalencia (positivos, negativos, cero) y valores 
 **Eficiencia (chequeo mínimo)**
 
 - Medir el tiempo de la operación más costosa (potencia con exponente grande) para confirmar que es despreciable.
+
+## 10. Cambio de requisitos: quinta operación (potencia)
+
+El cliente pide, con el proyecto ya aprobado y probado, la operación *a elevado a b* con un ciclo `for`. Es un **cambio de alcance**, así que no se programa directamente: se registra, se analiza su impacto, se aclaran los casos borde con el cliente, se obtiene su aprobación y solo entonces se implementa en una versión nueva (v1.1) con pruebas de regresión. El detalle completo está en [`Gestion_del_cambio.md`](Gestion_del_cambio.md).
+
+Resumen de lo implementado:
+
+```java
+public long potencia(int a, int b) {
+    if (b < 0) throw new ArithmeticException("Error: el exponente debe ser mayor o igual a cero.");
+    long resultado = 1;
+    for (int i = 0; i < b; i++) {
+        resultado = Math.multiplyExact(resultado, (long) a); // error si no cabe en long
+    }
+    return resultado;
+}
+```
+
+Supuestos pendientes de confirmación por el cliente: exponente negativo → error; 0^0 = 1; resultado que no cabe en `long` → mensaje de error.

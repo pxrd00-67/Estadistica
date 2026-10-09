@@ -8,6 +8,7 @@ rectangle "Calculadora de enteros" {
   usecase "Restar" as UC3
   usecase "Multiplicar" as UC4
   usecase "Dividir" as UC5
+  usecase "Calcular potencia (a^b)" as UC9
   usecase "Manejar división por cero" as UC7
   usecase "Mostrar resultados y mensajes" as UC6
 }
@@ -16,10 +17,12 @@ U --> UC2
 U --> UC3
 U --> UC4
 U --> UC5
+U --> UC9
 UC1 ..> UC8 : <<include>>
 UC7 ..> UC5 : <<extend>>
 UC2 ..> UC6 : <<include>>
 UC3 ..> UC6 : <<include>>
 UC4 ..> UC6 : <<include>>
 UC5 ..> UC6 : <<include>>
+UC9 ..> UC6 : <<include>>
 @enduml

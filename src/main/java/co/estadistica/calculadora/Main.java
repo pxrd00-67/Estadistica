@@ -23,6 +23,11 @@ public class Main {
         } catch (ArithmeticException e) {
             System.out.println("a / b -> " + e.getMessage());
         }
+        try {
+            System.out.println("a ^ b = " + calc.potencia(a, b));
+        } catch (ArithmeticException e) {
+            System.out.println("a ^ b -> " + e.getMessage());
+        }
     }
 
     /**

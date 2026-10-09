@@ -46,4 +46,22 @@ class CalculadoraTest {
     @Test @DisplayName("TC-20 decimal se rechaza y se vuelve a pedir") void tc20() { assertEquals(7, leer("3.5\n7\n")); }
     @Test @DisplayName("TC-21 fuera del rango de int se rechaza") void tc21() { assertEquals(1, leer("99999999999\n1\n")); }
     @Test @DisplayName("TC-22 entrada vacía/fin de datos devuelve null") void tc22() { assertNull(leer("")); }
+
+    // ---- Potencia (cambio solicitado por el cliente, v1.1) ----
+    @Test @DisplayName("TC-23 potencia positiva") void tc23() { assertEquals(8, c.potencia(2, 3)); }
+    @Test @DisplayName("TC-24 exponente cero") void tc24() { assertEquals(1, c.potencia(5, 0)); }
+    @Test @DisplayName("TC-25 exponente uno") void tc25() { assertEquals(7, c.potencia(7, 1)); }
+    @Test @DisplayName("TC-26 base negativa, exponente impar") void tc26() { assertEquals(-8, c.potencia(-2, 3)); }
+    @Test @DisplayName("TC-27 base negativa, exponente par") void tc27() { assertEquals(16, c.potencia(-2, 4)); }
+    @Test @DisplayName("TC-28 base cero") void tc28() { assertEquals(0, c.potencia(0, 5)); }
+    @Test @DisplayName("TC-29 cero elevado a cero") void tc29() { assertEquals(1, c.potencia(0, 0)); }
+    @Test @DisplayName("TC-30 exponente negativo") void tc30() {
+        ArithmeticException e = assertThrows(ArithmeticException.class, () -> c.potencia(2, -1));
+        assertEquals("Error: el exponente debe ser mayor o igual a cero.", e.getMessage());
+    }
+    @Test @DisplayName("TC-31 resultado demasiado grande") void tc31() {
+        ArithmeticException e = assertThrows(ArithmeticException.class, () -> c.potencia(2, 64));
+        assertEquals("Error: el resultado de la potencia es demasiado grande.", e.getMessage());
+    }
+    @Test @DisplayName("TC-32 mayor potencia de 2 que cabe en long") void tc32() { assertEquals(4611686018427387904L, c.potencia(2, 62)); }
 }
